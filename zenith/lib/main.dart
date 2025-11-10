@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zenith/core/navigation/main_screen.dart';
+import 'package:zenith/features/calendar/data/models/event_adapter.dart';
 
 void main() async {
   await Hive.initFlutter();
+  Hive.registerAdapter(EventAdapter());
   runApp(const MyApp());
 }
 

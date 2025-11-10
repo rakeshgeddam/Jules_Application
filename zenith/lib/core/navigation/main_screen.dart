@@ -4,6 +4,7 @@ import 'package:zenith/features/focus/focus_screen.dart';
 import 'package:zenith/features/journal/journal_screen.dart';
 import 'package:zenith/features/connections/connections_screen.dart';
 import 'package:zenith/features/settings/settings_screen.dart';
+import 'package:zenith/features/calendar/presentation/screens/calendar_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     FocusScreen(),
     JournalScreen(),
     ConnectionsScreen(),
+    CalendarScreen(),
     SettingsScreen(),
   ];
 
@@ -54,6 +56,10 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Connections',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
@@ -62,6 +68,7 @@ class _MainScreenState extends State<MainScreen> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
         unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:zenith/features/focus/focus_screen.dart';
 import 'package:zenith/features/journal/journal_screen.dart';
 import 'package:zenith/features/connections/connections_screen.dart';
 import 'package:zenith/features/settings/settings_screen.dart';
+import 'package:zenith/features/calendar/screens/calendar_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,12 +17,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     DashboardScreen(),
     FocusScreen(),
     JournalScreen(),
     ConnectionsScreen(),
     SettingsScreen(),
+    CalendarScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -57,6 +59,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
           ),
         ],
         currentIndex: _selectedIndex,

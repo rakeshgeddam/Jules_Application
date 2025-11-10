@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zenith/core/database/database_helper.dart';
+import 'package:zenith/models/journal_entry.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -11,7 +12,7 @@ class JournalScreen extends StatefulWidget {
 class _JournalScreenState extends State<JournalScreen> {
   final _textController = TextEditingController();
   final _databaseHelper = DatabaseHelper();
-  List<String> _journalEntries = [];
+  List<JournalEntry> _journalEntries = [];
 
   @override
   void initState() {
@@ -20,15 +21,19 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 
   Future<void> _loadJournalEntries() async {
-    final entries = await _databaseHelper.getJournalEntries();
+    // final entries = await _databaseHelper.getJournalEntries();
     setState(() {
-      _journalEntries = entries;
+      // _journalEntries = entries;
     });
   }
 
   Future<void> _saveJournalEntry() async {
     if (_textController.text.isNotEmpty) {
-      await _databaseHelper.saveJournalEntry(_textController.text);
+      final newEntry = JournalEntry(
+        content: _textController.text,
+        createdAt: DateTime.now(),
+      );
+      await _databaseHelper.saveJournalEntry(newEntry);
       _textController.clear();
       _loadJournalEntries();
     }
@@ -57,7 +62,7 @@ class _JournalScreenState extends State<JournalScreen> {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(_journalEntries[index]),
+                      child: Text(_journalEntries[index].content),
                     ),
                   );
                 },
@@ -75,10 +80,10 @@ class _JournalScreenState extends State<JournalScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _saveJournalEntry,
-              child: const Text('Reflect'),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
               ),
+              child: const Text('Reflect'),
             ),
           ],
         ),

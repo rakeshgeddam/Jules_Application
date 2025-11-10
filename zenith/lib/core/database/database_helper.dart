@@ -1,23 +1,31 @@
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:zenith/models/models.dart';
 
 class DatabaseHelper {
-  static const String _journalBoxName = 'journal';
-
-  Future<Box> get _journalBox async {
-    if (Hive.isBoxOpen(_journalBoxName)) {
-      return Hive.box(_journalBoxName);
-    } else {
-      return await Hive.openBox(_journalBoxName);
-    }
+  static Future<void> init() async {
+    await Hive.initFlutter();
+    _registerAdapters();
+    await _openBoxes();
   }
 
-  Future<void> saveJournalEntry(String entry) async {
-    final box = await _journalBox;
+  static void _registerAdapters() {
+    Hive.registerAdapter(TaskAdapter());
+    Hive.registerAdapter(JournalEntryAdapter());
+    Hive.registerAdapter(UserProfileAdapter());
+    Hive.registerAdapter(SessionAdapter());
+  }
+
+  static Future<void> _openBoxes() async {
+    await Hive.openBox<Task>('tasks');
+    await Hive.openBox<JournalEntry>('journal_entries');
+    await Hive.openBox<UserProfile>('user_profile');
+    await Hive.openBox<Session>('sessions');
+  }
+
+  Future<void> saveJournalEntry(JournalEntry entry) async {
+    final box = Hive.box<JournalEntry>('journal_entries');
     await box.add(entry);
   }
 
-  Future<List<String>> getJournalEntries() async {
-    final box = await _journalBox;
-    return box.values.cast<String>().toList();
-  }
+  getJournalEntries() {}
 }

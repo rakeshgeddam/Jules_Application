@@ -1,73 +1,207 @@
 import 'package:flutter/material.dart';
+import 'package:zenith/features/focus/pomodoro.dart';
+import 'deep_work.dart';
+import 'flow_state.dart';
+import 'sprint_session.dart';
+import 'custom_session.dart';
 
-class FocusScreen extends StatelessWidget {
+// Placeholder for navigation, replace with actual mode screen widgets
+void navigateToMode(BuildContext context, String mode, String task) {
+  if (mode == "Pomodoro") {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => PomodoroTimerScreen(
+                  taskName: task,
+                )));
+  }
+  else if (mode == "Deep Work") {
+    Navigator.push(
+      context,
+       MaterialPageRoute(builder: (_) => DeepWorkScreen(
+      taskName: task,)));
+  }
+  else if(mode == "Flow State") {
+    Navigator.push(
+      context,
+       MaterialPageRoute(builder: (_) => FlowStateScreen(
+      taskName: task,))); 
+  }
+  else if(mode == "Sprint Session") {
+    Navigator.push(
+      context,
+       MaterialPageRoute(builder: (_) => SprintSessionScreen(
+      taskName: task,)));
+  }
+  else if(mode == "Custom Session") {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => CustomSessionScreen(
+      taskName: task,)));
+  }
+   else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Navigate to $mode mode (implement screen)')),
+    );
+  }
+}
+
+class FocusScreen extends StatefulWidget {
   const FocusScreen({super.key});
+
+  @override
+  State<FocusScreen> createState() => _FocusScreenState();
+}
+
+class _FocusScreenState extends State<FocusScreen> {
+  final TextEditingController _taskController = TextEditingController();
+  int _selectedPriority = 1;
+
+  @override
+  void dispose() {
+    _taskController.dispose();
+    super.dispose();
+  }
+
+  Widget buildPrioritySelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(3, (index) {
+        int num = index + 1;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedPriority = num;
+              });
+            },
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: _selectedPriority == num
+                  ? Colors.deepPurple
+                  : Colors.deepPurple.withOpacity(0.3),
+              child: Text(
+                '$num',
+                style: TextStyle(
+                  color:
+                      _selectedPriority == num ? Colors.white : Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget buildFocusCard(
+      {required IconData icon,
+      required String title,
+      required Color color,
+      required String mode}) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      color: color.withOpacity(0.13),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 48, color: color),
+          const SizedBox(height: 14),
+          Text(title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                  fontSize: 17)),
+          const SizedBox(height: 14),
+          ElevatedButton(
+            onPressed: () {
+              navigateToMode(context, mode, _taskController.text);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: color,
+              shape: const StadiumBorder(),
+            ),
+            child: const Text('Activate',
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose Your Focus'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // TODO: Implement navigation back
-          },
-        ),
+        title: const Text('Choose Priorities'),
+        elevation: 0,
+        // Profile icon could be added here
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'My Task:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const TextField(
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _taskController,
               decoration: InputDecoration(
-                hintText: 'e.g., Finish report, Learn React hooks',
-                border: OutlineInputBorder(),
+                hintText: 'Enter your task/focus item...',
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14)),
+                filled: true,
+                fillColor: Colors.grey[100],
+                prefixIcon: const Icon(Icons.edit),
               ),
+              style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
+            const Text('Select Priority:',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black87)),
+            const SizedBox(height: 10),
+            buildPrioritySelector(),
+            const SizedBox(height: 18),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 18,
                 children: [
-                  _buildFocusCard(Icons.timer, 'Pomodoro', Colors.blue),
-                  _buildFocusCard(Icons.lightbulb, 'Deep Work', Colors.green),
-                  _buildFocusCard(Icons.auto_awesome, 'Flow State', Colors.orange),
-                  _buildFocusCard(Icons.directions_run, 'Sprint Session', Colors.red),
-                  _buildFocusCard(Icons.add_circle, 'Custom Session', Colors.grey),
+                  buildFocusCard(
+                      icon: Icons.timer,
+                      title: 'Pomodoro',
+                      color: Colors.redAccent,
+                      mode: "Pomodoro"),
+                  buildFocusCard(
+                      icon: Icons.lightbulb,
+                      title: 'Deep Work',
+                      color: Colors.deepPurple,
+                      mode: "Deep Work"),
+                  buildFocusCard(
+                      icon: Icons.auto_awesome,
+                      title: 'Flow State',
+                      color: Colors.orangeAccent,
+                      mode: "Flow State"),
+                  buildFocusCard(
+                      icon: Icons.directions_run,
+                      title: 'Sprint Session',
+                      color: Colors.blueAccent,
+                      mode: "Sprint Session"),
+                  buildFocusCard(
+                      icon: Icons.add_circle,
+                      title: 'Custom Session',
+                      color: Colors.teal,
+                      mode: "Custom Session"),
                 ],
               ),
             ),
+            // You could place a motivational quote/snippet here if desired
+            // Text("You can do it! 💪", style: TextStyle(color: Colors.deepPurple, fontSize: 16)),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildFocusCard(IconData icon, String title, Color color) {
-    return Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 50, color: color),
-          const SizedBox(height: 8),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Activate'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: color,
-            ),
-          ),
-        ],
       ),
     );
   }

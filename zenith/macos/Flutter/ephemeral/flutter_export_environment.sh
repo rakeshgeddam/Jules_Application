@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/app/flutter"
-export "FLUTTER_APPLICATION_PATH=/app/zenith"
+export "FLUTTER_ROOT=/nix/store/ksyk5yalwyxsyd964w32z77zv7cxl8bj-flutter-wrapped-3.22.0-sdk-links"
+export "FLUTTER_APPLICATION_PATH=/home/user/Jules_Application/zenith"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"

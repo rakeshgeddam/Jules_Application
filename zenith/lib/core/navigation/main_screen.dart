@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:flutter/material.dart';
 import 'package:zenith/features/dashboard/dashboard_screen.dart';
 import 'package:zenith/features/focus/focus_screen.dart';

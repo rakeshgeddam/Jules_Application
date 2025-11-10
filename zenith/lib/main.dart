@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:zenith/core/database/database_helper.dart';
 import 'package:zenith/core/navigation/main_screen.dart';
 
 void main() async {
-  await Hive.initFlutter();
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper.init();
   runApp(const MyApp());
 }
 
@@ -15,8 +16,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Zenith',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.deepPurple,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MainScreen(),
     );

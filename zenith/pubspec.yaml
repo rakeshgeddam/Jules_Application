@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  table_calendar: ^3.0.0
+  learning_entity_extraction: ^0.0.2
+  permission_handler: ^11.0.0
 
 dev_dependencies:
   flutter_test:
